@@ -1,6 +1,8 @@
 import express from "express";
 import cors from 'cors';
 
+const usuarios = [];
+const tweets = [];
 const server = express();
 server.use(cors());
 
