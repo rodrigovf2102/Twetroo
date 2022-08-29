@@ -13,7 +13,10 @@ server.post('/sign-up', (req, res) => {
         return res.status(400).send("Todos os campos são obrigatórios!");
     }
     if (!avatar.includes("https://")) {
-        return res.sendStatus(401);
+        return res.status(401).send("Formato de avatar inválido");
+    }
+    if(usuarios.find(usuario =>usuario.username === username)!== undefined){
+        return res.status(401).send("Usuário já cadastrado");
     }
     usuarios.push({ username,avatar });
     res.status(201).send("OK");
@@ -32,9 +35,17 @@ server.post('/tweets', (req, res) => {
 })
 
 server.get('/tweets', (req, res) => {
+    let page = req.query.page;
+    if(page===undefined){
+        page = 1;
+    }
+    page = parseInt(page);
+    if(page<0 || isNaN(page)){
+        return res.status(401).send("Informe uma página válida");
+    } 
     const lastTweets = [];
     const tweet = {};
-    for (let i = 0; i < 10; i++) {
+    for (let i = (page-1)*10; i < page*10; i++) {
         if (tweets[i] !== undefined) {
             tweet.username = tweets[i].username;
             tweet.tweet = tweets[i].tweet;
@@ -61,6 +72,5 @@ server.get('/tweets/:username', (req, res) => {
     }
     res.send(userTweets);
 })
-
 
 server.listen(5000);
