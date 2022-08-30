@@ -46,10 +46,12 @@ server.get('/tweets', (req, res) => {
     } 
     const lastTweets = [];
     const tweet = {};
+    const reverseTweets = [...tweets];
+    reverseTweets.reverse();
     for (let i = (page-1)*10; i < page*10; i++) {
-        if (tweets[i] !== undefined) {
-            tweet.username = tweets[i].username;
-            tweet.tweet = tweets[i].tweet;
+        if (reverseTweets[i] !== undefined) {
+            tweet.username = reverseTweets[i].username;
+            tweet.tweet = reverseTweets[i].tweet;
             let usuario = usuarios.find(usuario => usuario.username === tweet.username);
             tweet.avatar = usuario.avatar;
             lastTweets.push({ ...tweet });
